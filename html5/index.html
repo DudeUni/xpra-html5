@@ -105,9 +105,13 @@
         <li class="-hasSubmenu -noChevron">
           <a href="#" title="Xpra" class="noDrag" data-icon="menu" id="xpramenu"></a>
           <ul id="menu_list">
-            <li class="-hasSubmenu" id="startmenuentry" style="display: none">
+            <li class="-hasSubmenu" id="startmenuentry">
               <a data-icon="apps" href="#">Start</a>
-              <ul id="startmenu"></ul>
+              <ul id="startmenu">
+                <li id="start_xterm_menu_entry">
+                  <a href="#" data-icon="terminal" onclick="client.send(['start-command', 'Client-Start-xterm', ['xterm'], true, false]); return false">xterm</a>
+                </li>
+              </ul>
             </li>
             <li class="-hasSubmenu">
               <a href="#" data-icon="kitchen">Server</a>
@@ -115,8 +119,8 @@
                 <li id="clock_menu_entry">
                   <a href="#" data-icon="access_time" onclick="return false" id="clock_menu_text"></a>
                 </li>
-                <li id="upload_menu_entry">
-                  <a href="#" data-icon="cloud_upload" onclick="upload_file(event); return false">Upload
+                <li id="upload_menu_entry" style="display: none">
+                  <a href="#" data-icon="cloud_upload" onclick="return false">Upload
                     file</a>
                 </li>
                 <li id="download_menu_entry">
@@ -1152,27 +1156,10 @@
           return;
         }
 
-        function handleFileSelect(evt) {
-          evt.stopPropagation();
-          evt.preventDefault();
-          client.send_all_files(evt.dataTransfer.files);
-        }
-
-        function handleDragOver(evt) {
-          evt.stopPropagation();
-          evt.preventDefault();
-          evt.dataTransfer.dropEffect = "copy";
-        }
-        const screen = document.getElementById("screen");
-        screen.addEventListener("dragover", handleDragOver, false);
-        screen.addEventListener("drop", handleFileSelect, false);
-
-        $("#upload").on("change", function(evt) {
-          evt.stopPropagation();
-          evt.preventDefault();
-          client.send_all_files(this.files);
-          return false;
-        });
+        // Upload (client-to-server) is disabled.
+        // Drag-and-drop and file input handlers are intentionally removed.
+        // Download (server-to-client) remains functional via the download menu entry.
+        $("#upload_menu_entry").hide();
         $("#upload_form").on("submit", function(evt) {
           evt.preventDefault();
         });
@@ -1468,6 +1455,28 @@
         init_auth_autosubmit();
 
         client = init_client();
+
+        // Monkey-patch process_xdg_menu to re-add custom xterm entry
+        // after the server sends XDG menu data (which wipes #startmenu children)
+        const _orig_process_xdg_menu = client.process_xdg_menu.bind(client);
+        client.process_xdg_menu = function() {
+          _orig_process_xdg_menu();
+          const startmenu = document.querySelector("#startmenu");
+          const li = document.createElement("li");
+          li.id = "start_xterm_menu_entry";
+          const a = document.createElement("a");
+          a.href = "#";
+          a.setAttribute("data-icon", "terminal");
+          a.textContent = "xterm";
+          a.addEventListener("click", function(e) {
+            e.preventDefault();
+            client.send(['start-command', 'Client-Start-xterm', ['xterm'], true, false]);
+            document.querySelector("#menu_list").className = "-hide";
+          });
+          li.appendChild(a);
+          startmenu.prepend(li);
+        };
+
         addEventListener(
           "unload",
           () => {
