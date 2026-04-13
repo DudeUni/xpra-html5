@@ -105,52 +105,11 @@
         <li class="-hasSubmenu -noChevron">
           <a href="#" title="Xpra" class="noDrag" data-icon="menu" id="xpramenu"></a>
           <ul id="menu_list">
-            <li class="-hasSubmenu" id="startmenuentry">
-              <a data-icon="apps" href="#">Start</a>
-              <ul id="startmenu">
-                <li id="start_xterm_menu_entry">
-                  <a href="#" data-icon="terminal" onclick="client.send(['start-command', 'Client-Start-xterm', ['xterm'], true, false]); return false">xterm</a>
-                </li>
-              </ul>
-            </li>
-            <li class="-hasSubmenu">
-              <a href="#" data-icon="kitchen">Server</a>
-              <ul>
-                <li id="clock_menu_entry">
-                  <a href="#" data-icon="access_time" onclick="return false" id="clock_menu_text"></a>
-                </li>
-                <li id="upload_menu_entry" style="display: none">
-                  <a href="#" data-icon="cloud_upload" onclick="return false">Upload
-                    file</a>
-                </li>
-                <li id="download_menu_entry">
-                  <a href="#" data-icon="cloud_download" onclick="download_file(event); return false">Download file</a>
-                </li>
-                <li id="shutdown_menu_entry">
-                  <a href="#" data-icon="exit_to_app" onclick="confirm_shutdown_server(event); return false">Shutdown Server</a>
-                </li>
-              </ul>
-            </li>
-            <li class="-hasSubmenu">
-              <a href="#" data-icon="info">Information</a>
-              <ul>
-                <li>
-                  <a href="#" data-icon="info" onclick="show_about(event); return false">About Xpra</a>
-                </li>
-                <li>
-                  <a href="#" data-icon="trending_up" onclick="show_sessioninfo(event); return false">Session Info</a>
-                </li>
-                <li>
-                  <a href="#" data-icon="bug_report" onclick="show_bugreport(event); return false">Bug
-                    Report</a>
-                </li>
-              </ul>
+            <li  id="startmenuentry" onclick="client.send(['start-command', 'Client-Start-xterm', ['xterm'], true, false]); return false">
+              <a data-icon="apps" href="#">xterm</a>
             </li>
             <li>
               <a href="#" data-icon="refresh" onclick="location.reload()">Reload</a>
-            </li>
-            <li>
-              <a href="#" data-icon="exit_to_app" onclick="client.disconnect_reason='User request'; client.close(); return false">Disconnect</a>
             </li>
           </ul>
         </li>
