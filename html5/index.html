@@ -105,8 +105,9 @@
         <li class="-hasSubmenu -noChevron">
           <a href="#" title="Xpra" class="noDrag" data-icon="menu" id="xpramenu"></a>
           <ul id="menu_list">
-            <li  id="startmenuentry" onclick="client.send(['start-command', 'Client-Start-xterm', ['xterm'], true, false]); return false">
-              <a data-icon="apps" href="#">xterm</a>
+            <li class="-hasSubmenu" id="startmenuentry" style="display: none">
+              <a data-icon="apps" href="#">Tools</a>
+              <ul id="startmenu"></ul>
             </li>
             <li>
               <a href="#" data-icon="refresh" onclick="location.reload()">Reload</a>
