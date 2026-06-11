@@ -1,7 +1,12 @@
 # Changelog
 
 All notable changes to this project will be documented in this file.
-## [20.0] 2025-12-19
+## [21.0] 2026-05-11
+- [new printer subsystem prefix](https://github.com/Xpra-org/xpra-html5/commit/27b13d60b0655a7cbf4b8205258c79bdfc4b0704)
+- [support new keyboard mapping packet](https://github.com/Xpra-org/xpra-html5/commit/38c1f4892af366774dd733fc706f09bef6e3449d) [with newer servers](https://github.com/Xpra-org/xpra-html5/commit/519496a8bcec8d6197d5fca19f6bf2345318311a)
+- [rencode support for Map objects](https://github.com/Xpra-org/xpra-html5/commit/34b58a815359feba66cea47dfdce086fcb2e7bcc)
+
+## [20.0] 2026-12-19
 - [keyboard mapping](https://github.com/Xpra-org/xpra-html5/issues/406)
 - [desktop windows should be shown fullscreen](https://github.com/Xpra-org/xpra-html5/issues/407)
 - handle decode worker initialization timeouts

@@ -217,6 +217,27 @@ function rencode_list(l) {
 	return rencode_merge_arrays(rlist);
 }
 
+function rencode_map(m) {
+	const map_len = m.size;
+	const rlist = [];
+	if (map_len < RENCODE.DICT_FIXED_COUNT) {
+		rlist.push(new Uint8Array([RENCODE.DICT_FIXED_START + map_len]));
+		for (const [key, value] of m) {
+			rlist.push(rencode(key));
+			rlist.push(rencode(value));
+		}
+	}
+	else {
+		rlist.push(new Uint8Array([RENCODE.CHR_DICT]));
+		for (const [key, value] of m) {
+			rlist.push(rencode(key));
+			rlist.push(rencode(value));
+		}
+		rlist.push(new Uint8Array([RENCODE.CHR_TERM]));
+	}
+	return rencode_merge_arrays(rlist);
+}
+
 function rencode_dict(dict) {
 	const dict_len = Object.keys(dict).length;
 	const rlist = [];
@@ -254,16 +275,19 @@ function rencode_none() {
 }
 
 function rencode(obj) {
-	if (obj === null || obj === undefined) {
-		return rencode_none();
-	}
 	const type = typeof obj;
-	if(type === 'object') {
-		if(typeof obj.length === 'undefined') {
-			return rencode_dict(obj);
+	if (type === 'object') {
+		if (obj === null) {
+			return rencode_none();
 		}
-		if(obj.constructor===Uint8Array) {
+		if (obj instanceof Map) {
+			return rencode_map(obj);
+		}
+		if (obj.constructor === Uint8Array) {
 			return rencode_uint8(obj);
+		}
+		if (typeof obj.length === 'undefined') {
+			return rencode_dict(obj);
 		}
 		return rencode_list(obj);
 	}
